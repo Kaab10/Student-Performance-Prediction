@@ -58,7 +58,7 @@ Student-Performance-Prediction/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/bilalahmed251/Student-Performance-Prediction.git
+   git clone https://github.com/Kaab10/Student-Performance-Prediction.git
    cd Student-Performance-Prediction
    ```
 
