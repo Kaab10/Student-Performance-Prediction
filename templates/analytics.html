@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics — ScholarPulse{% endblock %}
+
+{% block head %}
+<style>
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.2rem 1.1rem;
+  }
+  .stat .label {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    font-weight: 650;
+    margin: 0;
+  }
+  .stat .value {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin: 0.35rem 0 0;
+    letter-spacing: -0.03em;
+  }
+  .insight {
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  @media (max-width: 860px) {
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Analytics overview</h1>
+  <p>Aggregate outcomes across every prediction saved in the local database.</p>
+</section>
+
+{% if total > 0 %}
+<div class="stats-grid">
+  <article class="stat">
+    <p class="label">Total predictions</p>
+    <p class="value">{{ total }}</p>
+  </article>
+  <article class="stat">
+    <p class="label">Average score</p>
+    <p class="value">{{ '%.1f'|format(stats.avg_score or 0) }}</p>
+  </article>
+  <article class="stat">
+    <p class="label">Pass rate</p>
+    <p class="value">{{ '%.0f'|format(pass_rate) }}%</p>
+  </article>
+  <article class="stat">
+    <p class="label">Score range</p>
+    <p class="value" style="font-size:1.35rem;">{{ '%.0f'|format(stats.min_score or 0) }}–{{ '%.0f'|format(stats.max_score or 0) }}</p>
+  </article>
+</div>
+
+<section class="panel">
+  <p class="insight">
+    {{ stats.total_pass or 0 }} students predicted to pass and
+    {{ stats.total_fail or 0 }} predicted to fail across the logged history.
+  </p>
+  <div class="actions">
+    <a class="btn btn-primary" href="{{ url_for('history') }}">Browse history</a>
+    <a class="btn btn-ghost" href="{{ url_for('index') }}">New prediction</a>
+  </div>
+</section>
+{% else %}
+<section class="panel">
+  <p class="insight">No predictions have been stored yet. Run a few predictions to unlock analytics.</p>
+  <div class="actions">
+    <a class="btn btn-primary" href="{{ url_for('index') }}">Make a prediction</a>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
