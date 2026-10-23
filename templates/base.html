@@ -13,10 +13,12 @@
 <body>
   <header class="site-header">
     <a class="brand" href="{{ url_for('index') }}">Scholar<span>Pulse</span></a>
-    <nav>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation">Menu</button>
+    <nav id="site-nav" class="site-nav">
       <ul class="nav-links">
         <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Predict</a></li>
         <li><a href="{{ url_for('history') }}" class="{% if request.endpoint == 'history' %}active{% endif %}">History</a></li>
+        <li><a href="{{ url_for('analytics') }}" class="{% if request.endpoint == 'analytics' %}active{% endif %}">Analytics</a></li>
       </ul>
     </nav>
   </header>
@@ -26,9 +28,13 @@
   </main>
 
   <footer class="site-footer">
-    Student Performance Prediction &amp; Analytics Suite
+    <div class="footer-inner">
+      <strong>ScholarPulse</strong>
+      <span>Student performance prediction &amp; analytics</span>
+    </div>
   </footer>
 
+  <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>
