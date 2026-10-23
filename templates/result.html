@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result — ScholarPulse{% endblock %}
+
+{% block head %}
+<style>
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.25rem;
+  }
+  .score-card {
+    text-align: center;
+    padding: 1.75rem 1.25rem;
+  }
+  .score-value {
+    font-family: var(--font-display);
+    font-size: 3.4rem;
+    margin: 0.35rem 0;
+    letter-spacing: -0.04em;
+  }
+  .badge {
+    display: inline-block;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+  .badge-pass { background: #d1fae5; color: var(--success); }
+  .badge-fail { background: #fee2e2; color: var(--danger); }
+  .meta-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .meta-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .meta-list strong { color: var(--ink); }
+  .meta-list span { color: var(--ink-soft); }
+  .chart-wrap {
+    margin-top: 1.25rem;
+    text-align: center;
+  }
+  .chart-wrap img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+  }
+  .importance {
+    margin-top: 1rem;
+  }
+  .importance h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+  }
+  .imp-row {
+    display: grid;
+    grid-template-columns: 9rem 1fr auto;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 0.55rem;
+    font-size: 0.9rem;
+  }
+  .imp-bar {
+    height: 0.55rem;
+    background: #e8eef0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .imp-bar > i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #1aa897);
+    border-radius: inherit;
+  }
+  @media (max-width: 800px) {
+    .result-grid { grid-template-columns: 1fr; }
+    .imp-row { grid-template-columns: 1fr; gap: 0.25rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Prediction for {{ student_name or 'Student' }}</h1>
+  <p>Model used: {{ model_used }} · Pass threshold is 40%</p>
+</section>
+
+<div class="result-grid">
+  <section class="panel score-card">
+    <p style="margin:0;color:var(--ink-soft);font-weight:600;">Predicted score</p>
+    <p class="score-value">{{ '%.1f'|format(predicted_score) }}</p>
+    {% if pass_fail == 'Pass' %}
+    <span class="badge badge-pass">Pass</span>
+    {% else %}
+    <span class="badge badge-fail">Fail</span>
+    {% endif %}
+
+    {% if chart_path %}
+    <div class="chart-wrap">
+      <img src="{{ url_for('static', filename='charts/' + chart_path) }}" alt="Performance chart">
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <ul class="meta-list">
+      <li><span>Attendance</span><strong>{{ '%.1f'|format(attendance) }}%</strong></li>
+      <li><span>Study hours / day</span><strong>{{ '%.1f'|format(study_hours) }}</strong></li>
+      <li><span>Previous marks</span><strong>{{ '%.1f'|format(previous_marks) }}%</strong></li>
+      <li><span>Status</span><strong>{{ pass_fail }}</strong></li>
+    </ul>
+
+    {% if feature_importance %}
+    <div class="importance">
+      <h3>Feature importance</h3>
+      {% for name, weight in feature_importance.items() %}
+      <div class="imp-row">
+        <span>{{ name }}</span>
+        <div class="imp-bar"><i style="width: {{ (weight * 100)|round(1) }}%;"></i></div>
+        <strong>{{ '%.1f'|format(weight * 100) }}%</strong>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="actions">
+      <a class="btn btn-primary" href="{{ url_for('index') }}">New prediction</a>
+      <a class="btn btn-ghost" href="{{ url_for('history') }}">History</a>
+    </div>
+  </section>
+</div>
+{% endblock %}

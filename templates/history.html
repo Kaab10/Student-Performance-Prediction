@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction History — ScholarPulse{% endblock %}
+
+{% block head %}
+<style>
+  .table-wrap {
+    overflow-x: auto;
+  }
+  table.history {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  table.history th,
+  table.history td {
+    text-align: left;
+    padding: 0.85rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  table.history th {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  table.history tbody tr:hover {
+    background: #f5faf9;
+  }
+  .status-pill {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+  .status-pass { background: #d1fae5; color: var(--success); }
+  .status-fail { background: #fee2e2; color: var(--danger); }
+  .empty-state {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--ink-soft);
+  }
+  .empty-state h2 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    margin: 0 0 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Prediction history</h1>
+  <p>All saved student predictions, newest first.</p>
+</section>
+
+<section class="panel">
+  {% if predictions and predictions|length > 0 %}
+  <div class="table-wrap">
+    <table class="history">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Attendance</th>
+          <th>Study hrs</th>
+          <th>Prev. marks</th>
+          <th>Predicted</th>
+          <th>Status</th>
+          <th>When</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in predictions %}
+        <tr>
+          <td>{{ row['student_name'] }}</td>
+          <td>{{ '%.1f'|format(row['attendance']) }}%</td>
+          <td>{{ '%.1f'|format(row['study_hours']) }}</td>
+          <td>{{ '%.1f'|format(row['previous_marks']) }}%</td>
+          <td><strong>{{ '%.1f'|format(row['predicted_score']) }}</strong></td>
+          <td>
+            {% if row['pass_fail'] == 'Pass' %}
+            <span class="status-pill status-pass">Pass</span>
+            {% else %}
+            <span class="status-pill status-fail">Fail</span>
+            {% endif %}
+          </td>
+          <td>{{ row['timestamp'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h2>No predictions yet</h2>
+    <p>Run a prediction to start building your history log.</p>
+    <div class="actions" style="justify-content:center;">
+      <a class="btn btn-primary" href="{{ url_for('index') }}">Make a prediction</a>
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
