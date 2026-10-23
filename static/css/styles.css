@@ -1,0 +1,249 @@
+/* Student Performance Prediction — design tokens & base styles */
+
+:root {
+  --ink: #0f1c2e;
+  --ink-soft: #3a4a5c;
+  --paper: #f3f6f4;
+  --surface: #ffffff;
+  --accent: #0d7a6f;
+  --accent-deep: #095e56;
+  --accent-soft: #d6ebe8;
+  --warn: #b45309;
+  --danger: #b91c1c;
+  --success: #047857;
+  --line: #d5dde3;
+  --shadow: 0 12px 32px rgba(15, 28, 46, 0.08);
+  --radius: 14px;
+  --font-display: "Fraunces", "Palatino Linotype", Palatino, serif;
+  --font-body: "Source Sans 3", "Segoe UI", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #c8e6e1 0%, transparent 55%),
+    radial-gradient(900px 420px at 100% 0%, #e8eef5 0%, transparent 50%),
+    var(--paper);
+  line-height: 1.55;
+}
+
+a {
+  color: var(--accent-deep);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 5vw;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: var(--ink-soft);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--accent-deep);
+}
+
+main {
+  width: min(1080px, 92vw);
+  margin: 2.25rem auto 3.5rem;
+}
+
+.hero {
+  margin-bottom: 1.75rem;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  margin: 0 0 0.55rem;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.hero p {
+  margin: 0;
+  max-width: 38rem;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.6rem 1.75rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-weight: 650;
+  font-size: 0.92rem;
+}
+
+.field .hint {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.field input {
+  appearance: none;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  color: var(--ink);
+  background: #fbfcfc;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.72rem 1.35rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--accent-deep);
+  color: #fff;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1.5px solid var(--line);
+}
+
+.alert {
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.1rem;
+  font-weight: 600;
+}
+
+.alert-error {
+  background: #fef2f2;
+  color: var(--danger);
+  border: 1px solid #fecaca;
+}
+
+.site-footer {
+  text-align: center;
+  padding: 1.5rem 1rem 2rem;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    gap: 0.85rem;
+  }
+
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

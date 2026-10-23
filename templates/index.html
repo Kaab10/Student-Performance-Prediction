@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Predict Performance — ScholarPulse{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Predict student outcomes before the term ends</h1>
+  <p>Enter attendance, study habits, and prior marks to estimate a final score and pass/fail outlook with our trained models.</p>
+</section>
+
+<section class="panel">
+  {% if error %}
+  <div class="alert alert-error" role="alert">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('predict') }}" novalidate>
+    <div class="form-grid">
+      <div class="field full">
+        <label for="student_name">Student name</label>
+        <input type="text" id="student_name" name="student_name" placeholder="e.g. Aisha Khan" maxlength="80">
+        <span class="hint">Optional — stored with the prediction for history.</span>
+      </div>
+
+      <div class="field">
+        <label for="attendance">Attendance (%)</label>
+        <input type="number" id="attendance" name="attendance" min="0" max="100" step="0.1" required placeholder="0–100">
+        <span class="hint">Lecture attendance percentage.</span>
+      </div>
+
+      <div class="field">
+        <label for="study_hours">Study hours / day</label>
+        <input type="number" id="study_hours" name="study_hours" min="0" max="24" step="0.1" required placeholder="0–24">
+        <span class="hint">Average daily study time.</span>
+      </div>
+
+      <div class="field full">
+        <label for="previous_marks">Previous marks (%)</label>
+        <input type="number" id="previous_marks" name="previous_marks" min="0" max="100" step="0.1" required placeholder="0–100">
+        <span class="hint">Most recent exam or course average.</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Run prediction</button>
+      <a class="btn btn-ghost" href="{{ url_for('history') }}">View history</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
