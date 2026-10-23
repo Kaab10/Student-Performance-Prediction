@@ -3,51 +3,7 @@
 {% block title %}Prediction History — ScholarPulse{% endblock %}
 
 {% block head %}
-<style>
-  .table-wrap {
-    overflow-x: auto;
-  }
-  table.history {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-  }
-  table.history th,
-  table.history td {
-    text-align: left;
-    padding: 0.85rem 0.7rem;
-    border-bottom: 1px solid var(--line);
-    white-space: nowrap;
-  }
-  table.history th {
-    color: var(--ink-soft);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  table.history tbody tr:hover {
-    background: #f5faf9;
-  }
-  .status-pill {
-    display: inline-block;
-    padding: 0.2rem 0.65rem;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 0.82rem;
-  }
-  .status-pass { background: #d1fae5; color: var(--success); }
-  .status-fail { background: #fee2e2; color: var(--danger); }
-  .empty-state {
-    text-align: center;
-    padding: 2.5rem 1rem;
-    color: var(--ink-soft);
-  }
-  .empty-state h2 {
-    font-family: var(--font-display);
-    color: var(--ink);
-    margin: 0 0 0.5rem;
-  }
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -58,8 +14,21 @@
 
 <section class="panel">
   {% if predictions and predictions|length > 0 %}
+  <div class="history-toolbar">
+    <label class="search-field" for="history-search">
+      <span class="sr-only">Search students</span>
+      <input type="search" id="history-search" placeholder="Search by student name…" autocomplete="off">
+    </label>
+    <div class="filter-group" role="group" aria-label="Filter by status">
+      <button type="button" class="filter-chip is-active" data-filter="all">All</button>
+      <button type="button" class="filter-chip" data-filter="Pass">Pass</button>
+      <button type="button" class="filter-chip" data-filter="Fail">Fail</button>
+    </div>
+    <p class="match-count" id="match-count" aria-live="polite"></p>
+  </div>
+
   <div class="table-wrap">
-    <table class="history">
+    <table class="history" id="history-table">
       <thead>
         <tr>
           <th>Student</th>
@@ -73,7 +42,7 @@
       </thead>
       <tbody>
         {% for row in predictions %}
-        <tr>
+        <tr data-name="{{ row['student_name']|lower }}" data-status="{{ row['pass_fail'] }}">
           <td>{{ row['student_name'] }}</td>
           <td>{{ '%.1f'|format(row['attendance']) }}%</td>
           <td>{{ '%.1f'|format(row['study_hours']) }}</td>
@@ -92,8 +61,10 @@
       </tbody>
     </table>
   </div>
+  <p id="no-match" class="no-match" hidden>No rows match this search or filter.</p>
   {% else %}
   <div class="empty-state">
+    <div class="empty-mark" aria-hidden="true"></div>
     <h2>No predictions yet</h2>
     <p>Run a prediction to start building your history log.</p>
     <div class="actions" style="justify-content:center;">
@@ -102,4 +73,10 @@
   </div>
   {% endif %}
 </section>
+{% endblock %}
+
+{% block scripts %}
+{% if predictions and predictions|length > 0 %}
+<script src="{{ url_for('static', filename='js/history.js') }}"></script>
+{% endif %}
 {% endblock %}
