@@ -112,32 +112,41 @@ def generate_chart(attendance, study_hours, previous_marks, predicted_score):
         # Chart 1: Input Parameters
         categories = ['Attendance\n(%)', 'Study Hours\n(per day)', 'Previous\nMarks']
         values = [attendance, study_hours * 4.17, previous_marks]  # Scale study hours for visualization
-        colors = ['#4CAF50', '#2196F3', '#FF9800']
+        # Palette aligned with ScholarPulse UI
+        colors = ['#0d7a6f', '#3a6ea5', '#b45309']
+        fig.patch.set_facecolor('#f3f6f4')
+        for ax in axes:
+            ax.set_facecolor('#ffffff')
+            ax.spines['top'].set_visible(False)
+            ax.spines['right'].set_visible(False)
+            ax.spines['left'].set_color('#d5dde3')
+            ax.spines['bottom'].set_color('#d5dde3')
+            ax.tick_params(colors='#3a4a5c')
 
-        axes[0].bar(categories, values, color=colors, alpha=0.7, edgecolor='black')
-        axes[0].set_ylabel('Value', fontsize=12)
-        axes[0].set_title('Input Parameters', fontsize=14, fontweight='bold')
+        axes[0].bar(categories, values, color=colors, alpha=0.9, edgecolor='#0f1c2e', linewidth=0.6)
+        axes[0].set_ylabel('Value', fontsize=11, color='#3a4a5c')
+        axes[0].set_title('Input Parameters', fontsize=13, fontweight='bold', color='#0f1c2e')
         axes[0].set_ylim(0, 100)
-        axes[0].grid(axis='y', alpha=0.3)
+        axes[0].grid(axis='y', alpha=0.25, color='#d5dde3')
 
         # Add value labels on bars
         for i, v in enumerate(values):
-            axes[0].text(i, v + 2, f'{v:.1f}', ha='center', va='bottom', fontweight='bold')
+            axes[0].text(i, v + 2, f'{v:.1f}', ha='center', va='bottom', fontweight='bold', color='#0f1c2e')
 
         # Chart 2: Predicted Score
         pass_threshold = 40
-        colors_score = ['#4CAF50' if predicted_score >= pass_threshold else '#F44336']
+        colors_score = ['#047857' if predicted_score >= pass_threshold else '#b91c1c']
 
-        axes[1].bar(['Predicted Score'], [predicted_score], color=colors_score, alpha=0.7, edgecolor='black', width=0.5)
-        axes[1].axhline(y=pass_threshold, color='red', linestyle='--', linewidth=2, label=f'Pass Threshold ({pass_threshold})')
-        axes[1].set_ylabel('Score', fontsize=12)
-        axes[1].set_title('Predicted Performance', fontsize=14, fontweight='bold')
+        axes[1].bar(['Predicted Score'], [predicted_score], color=colors_score, alpha=0.9, edgecolor='#0f1c2e', linewidth=0.6, width=0.5)
+        axes[1].axhline(y=pass_threshold, color='#b91c1c', linestyle='--', linewidth=1.8, label=f'Pass Threshold ({pass_threshold})')
+        axes[1].set_ylabel('Score', fontsize=11, color='#3a4a5c')
+        axes[1].set_title('Predicted Performance', fontsize=13, fontweight='bold', color='#0f1c2e')
         axes[1].set_ylim(0, 100)
-        axes[1].grid(axis='y', alpha=0.3)
-        axes[1].legend()
+        axes[1].grid(axis='y', alpha=0.25, color='#d5dde3')
+        axes[1].legend(frameon=False)
 
         # Add value label
-        axes[1].text(0, predicted_score + 2, f'{predicted_score:.1f}', ha='center', va='bottom', fontweight='bold', fontsize=12)
+        axes[1].text(0, predicted_score + 2, f'{predicted_score:.1f}', ha='center', va='bottom', fontweight='bold', fontsize=12, color='#0f1c2e')
 
         plt.tight_layout()
 
@@ -148,7 +157,7 @@ def generate_chart(attendance, study_hours, previous_marks, predicted_score):
         # Create charts directory if it doesn't exist
         os.makedirs(os.path.join('static', 'charts'), exist_ok=True)
 
-        plt.savefig(chart_path, dpi=100, bbox_inches='tight')
+        plt.savefig(chart_path, dpi=120, bbox_inches='tight', facecolor=fig.get_facecolor())
         plt.close()
 
         return chart_filename

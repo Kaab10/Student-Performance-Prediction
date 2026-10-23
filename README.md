@@ -1,42 +1,46 @@
- # 🎓 Student Performance Prediction & Analytics Suite
+# Student Performance Prediction & Analytics Suite
 
-A comprehensive machine learning system designed to predict student performance (numerical score and pass/fail classification) based on behavioral and academic features. Built with a robust Python/Flask backend and an interactive web interface.
-
----
-
-## 🚀 Key Features
-* **Multi-Algorithm Model Training:** Implements and compares multiple predictive models:
-  * **Regression (Score Prediction):** Linear Regression vs. Random Forest Regressor.
-  * **Classification (Pass/Fail):** Logistic Regression vs. Random Forest Classifier.
-* **Interactive Flask Web UI:** A clean, responsive form where users can input student metrics and receive instant real-time predictions.
-* **Data Visualization:** Generates dynamic **Matplotlib** charts comparing the student's metrics to class averages and passing thresholds.
-* **Persistent Database Logging:** Automatically saves all input parameters and predicted metrics to an SQLite database (`students.db`) for long-term tracking.
-* **Historical Performance Dashboard:** A dedicated `/history` panel to view, search, and analyze all past performance predictions.
+A machine learning system that predicts student performance (numerical score and pass/fail) from attendance, study habits, and prior marks. Built with a Flask backend and the ScholarPulse web UI.
 
 ---
 
-## 🛠️ Technology Stack
+## Key Features
+* **Multi-Algorithm Model Training:** Compares Linear/Logistic Regression with Random Forest regressors and classifiers.
+* **ScholarPulse Web UI:** Responsive prediction form with live validation, result score ring, history filters, and analytics cards.
+* **Data Visualization:** Matplotlib charts styled to match the UI, including pass-threshold markers.
+* **Persistent Database Logging:** Saves inputs and predictions to SQLite (`students.db`).
+* **History & Analytics:** `/history` for searchable past runs and `/analytics` for aggregate pass rate and score stats.
+
+---
+
+## Technology Stack
 * **Language:** Python 3
-* **Machine Learning:** Scikit-Learn (including `StandardScaler` pipeline normalization)
-* **Web Framework:** Flask (Backend) + HTML5 / CSS3 / Bootstrap (Frontend)
+* **Machine Learning:** Scikit-Learn (`StandardScaler` pipeline)
+* **Web Framework:** Flask + HTML5 / CSS3 / vanilla JS
 * **Data Science:** Pandas, NumPy, Matplotlib
 * **Database:** SQLite3
 
 ---
 
-## 📦 Directory Structure
+## Directory Structure
 ```text
 Student-Performance-Prediction/
-├── app.py              # Flask Web Application & Route Handlers
-├── database.py         # SQLite Database Schema & Session Controller
-├── model.py            # Machine Learning Model Pipeline (Train/Predict)
-├── students.db         # Persistent SQLite Database
-└── README.md           # Project Documentation
+├── app.py                 # Flask routes, chart generation
+├── database.py            # SQLite schema & helpers
+├── model.py               # ML train / predict pipeline
+├── students.db            # Persistent SQLite database
+├── requirements.txt       # Python dependencies
+├── templates/             # Jinja2 pages (base, index, result, history, analytics)
+├── static/
+│   ├── css/               # Design system and page styles
+│   ├── js/                # Nav, form validation, history filters
+│   └── charts/            # Generated prediction charts
+└── README.md
 ```
 
 ---
 
-## 🧠 Model & Feature Architecture
+## Model & Feature Architecture
 
 ### Feature Input Matrix:
 1. **Attendance (%):** Percentage of lectures attended.
@@ -44,13 +48,13 @@ Student-Performance-Prediction/
 3. **Previous Marks (%):** Prior academic performance.
 
 ### Preprocessing & Pipeline:
-* Inputs are scaled using a fitted **StandardScaler** pipeline to ensure optimal weight distribution across regression and classification models.
-* **Random Forest Regressor** is utilized as the default production model for score prediction due to its superior non-linear fitting capabilities.
-* **Pass/Fail Threshold:** Set at **40%**. If the predicted score is >= 40, the student is classified as "Pass"; otherwise, "Fail".
+* Inputs are scaled with a fitted **StandardScaler**.
+* **Random Forest Regressor** is the default production model for score prediction.
+* **Pass/Fail Threshold:** 40%. Predicted score >= 40 is classified as Pass.
 
 ---
 
-## 💻 Installation & Setup
+## Installation & Setup
 
 1. **Clone the repository:**
    ```bash
@@ -60,10 +64,10 @@ Student-Performance-Prediction/
 
 2. **Install dependencies:**
    ```bash
-   pip install flask scikit-learn pandas numpy matplotlib
+   pip install -r requirements.txt
    ```
 
-3. **Train the models & initialize the database:**
+3. **Optional — train models / initialize DB from the CLI:**
    ```bash
    python model.py
    python database.py
@@ -73,23 +77,27 @@ Student-Performance-Prediction/
    ```bash
    python app.py
    ```
-   * Open your browser and navigate to `http://127.0.0.1:5000` to interact with the engine.
+   Open `http://127.0.0.1:7860` (or the port set by the `PORT` environment variable).
 
 ---
 
-## 📊 Database Schema (`students.db`)
-Predictions are stored in a structured `predictions` table with the following schema:
+## Database Schema (`students.db`)
+Predictions are stored in a `predictions` table:
 * `id` (Primary Key, Auto-increment)
+* `student_name` (Text)
 * `attendance` (Float)
 * `study_hours` (Float)
 * `previous_marks` (Float)
 * `predicted_score` (Float)
-* `status` (String - "Pass" or "Fail")
+* `pass_fail` (String — Pass or Fail)
 * `timestamp` (DateTime)
 
 ---
 
-## 🌟 Recruiter Review Highlights
-* **Full-Stack ML Engineering:** Showcases integration of machine learning pipelines with production web frameworks (Flask) and relational databases (SQLite).
-* **Robust Input Validation:** Web form prevents out-of-bound inputs (e.g. attendance > 100%).
-* **Data Visualization:** Dynamic charting shows a deep understanding of analytical reporting for end-users.
+## Routes
+| Path | Purpose |
+|------|---------|
+| `/` | Prediction form |
+| `/predict` | POST handler for new predictions |
+| `/history` | Searchable prediction log |
+| `/analytics` | Aggregate stats dashboard |
